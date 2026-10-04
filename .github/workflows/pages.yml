@@ -19,9 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stage site files (exclude design doc)
+        run: |
+          mkdir -p site
+          cp index.html style.css game.js README.md site/
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
 
   deploy:
     needs: build
