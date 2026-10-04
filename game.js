@@ -284,7 +284,7 @@ function showMissions(){
   });
   const i=missionStatus();
   if(i<MISSIONS.length) print(`Next: <span class=in>mission ${i}</span> — ${esc(MISSIONS[i].brief)}`,'warn');
-  else { print(`<b>YOU WIN.</b> The Oldnet breathes; innocents get their corner of Betanet. The 2006 dream, shipped.`,'ok'); notify('<b>VICTORY</b> — struggle complete.'); }
+  else { print(`<b>YOU WIN.</b> The Oldnet breathes; innocents get their corner of Betanet. The struggle is won.`,'ok'); notify('<b>VICTORY</b> — struggle complete.'); }
 }
 
 /* ---------------- programs (run) ---------------- */
@@ -792,8 +792,8 @@ function tick(){
 /* ---------------- intro ---------------- */
 function intro(){
   const b=$('#story-banner'); b.style.display='block';
-  b.innerHTML=`<b>PLOT (from your 2006 doc):</b> The internet is dead — replaced by the gov-run wireless <b>Betanet</b>. No games, no filesharing, no personal sites. The old wired <b>Oldnet</b> rots, and the government hunts its servers. As a new initiate of hacker cell <b>K</b>, help keep Oldnet alive and pry open Betanet. <span style="opacity:.8">Type <b>missions</b> to begin. Physical body included: <b>go cafe</b>, <b>use cafe-laptop</b>.</span>`;
-  print(`HACKER SIM booted. ${new Date().getFullYear()} build of a 2006 design.`,'sys');
+  b.innerHTML=`<b>PLOT:</b> The internet is dead — replaced by the gov-run wireless <b>Betanet</b>. No games, no filesharing, no personal sites. The old wired <b>Oldnet</b> rots, and the government hunts its servers. As a new initiate of hacker cell <b>K</b>, help keep Oldnet alive and pry open Betanet. <span style="opacity:.8">Type <b>missions</b> to begin. Physical body included: <b>go cafe</b>, <b>use cafe-laptop</b>.</span>`;
+  print(`HACKER SIM booted.`, 'sys');
   print(`You are <b>me@${S.local}</b> at <b>home</b>. Money $${S.money}. Modems: ${S.hw.modems}.`,'sys');
   print(`Start: <span class=in>missions</span> · <span class=in>scan</span> · <span class=in>connect rusty-archive</span> · <span class=in>cat /pub/betanet-notes.txt</span>`,'warn');
   notify('email: <b>cell-K</b>: welcome, kid. read missions. don\'t get traced. — K', true);
