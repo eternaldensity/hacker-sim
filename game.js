@@ -227,7 +227,7 @@ function addLog(devId, entry){
 }
 function traceTick(){
   const ep=endpoint();
-  if(!ep){ S.trace=Math.max(0,S.trace-1.2); return; }
+  if(!ep){ S.trace=Math.max(0,S.trace-2); return; }
   const dev=DEVICES[ep];
   let rate=dev.traceRate;
   rate=Math.max(0.1, rate - 0.55*(S.chain.length-1)); // each bounce buys trace time (doc)
@@ -419,6 +419,8 @@ reg('connect', (a)=>{
   if(toll>S.money){ print(`backbone toll $${toll} — you only have $${S.money}. Earn via spam.`,'err'); return; }
   const secs=slow?8:3;
   addTask(`connect ${from}→${to} (${r.via})`,secs,20,()=>{
+    const cur=S.chain.length?S.chain[S.chain.length-1]:S.local;
+    if(cur!==from){ print(`connect ${from}→${to} failed: route changed mid-dial (you disconnected).`,'err'); return; }
     if(toll){ S.money-=toll; print(`paid backbone toll $${toll} (money $${S.money})`,'warn'); }
     S.chain.push(to); S.known.add(to); S.chainMax=Math.max(S.chainMax,S.chain.length);
     S.cwd[to]=S.cwd[to]||'/';
@@ -452,7 +454,25 @@ reg('login|logon', (a)=>{
 }, 'login to endpoint');
 
 reg('logout', (a)=>{ const n=parseInt(a[0]||'1',10)||1; for(let i=0;i<n;i++){ const l=[...S.logins].pop(); if(!l)break; S.logins.delete(l);} print('logged out ('+n+'). remaining: '+([...S.logins].join(', ')||'none'),'dim'); }, 'logout');
-reg('disconnect|dc', (a)=>{ const n=parseInt(a[0]||'1',10)||1; for(let i=0;i<n&&S.chain.length;i++){ const d=S.chain.pop(); print(`disconnected ${d}`,'dim'); } if(!S.chain.length){S.scramblerOn=false;} updatePrompt(); }, 'disconnect N hops');
+reg('disconnect|dc', (a)=>{
+  if(!S.chain.length){ print('not connected (local only — nothing to drop).','dim'); return; }
+  const n = a[0]===undefined ? S.chain.length : (parseInt(a[0],10)||1);
+  const dropped=[];
+  for(let i=0;i<n&&S.chain.length;i++){ dropped.push(S.chain.pop()); }
+  // cancel in-flight tasks bound to the dropped route: a pending connect would
+  // otherwise complete later and silently put you back online (trace resumes).
+  const killed=[];
+  S.tasks=S.tasks.filter(t=>{
+    if(t.label.startsWith('connect ')){ killed.push(t.label); return false; }
+    if(dropped.some(d=>t.label.includes(d))){ killed.push(t.label); return false; }
+    return true;
+  });
+  if(!S.chain.length){ S.scramblerOn=false; }
+  if(S.chain.length) print(`disconnected ${dropped.join(', ')} — still routed via ${S.chain.join(' \u2192 ')}: trace is STILL LIVE. Use bare disconnect to drop everything.`,'warn');
+  else print(`disconnected ${dropped.join(', ')} — fully offline. Trace cooling down.`,'ok');
+  if(killed.length) print(`cancelled stale in-flight: ${killed.join('; ')}`,'warn');
+  updatePrompt();
+}, 'disconnect all hops (or: disconnect N)');
 reg('connections|conn', ()=>{ print('chain: '+(S.chain.length?S.chain.join(' → '):'(local, no bounce)')+'\nlocal device: '+S.local+' @ '+S.place,'sys'); }, 'show paths');
 reg('logins', ()=>{ print('logins: '+([...S.logins].join(', ')||'none'),'sys'); }, 'show logins');
 
