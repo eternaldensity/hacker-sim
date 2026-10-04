@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACKER SIM — Oldnet vs Betanet (2006 design, built 2026)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <span class="logo">HACKER<span class="logo-dim">_SIM</span> <span class="ver">v0.1 // Oldnet vs Betanet</span></span>
+    <span id="clock">00:00:00</span>
+    <span class="top-links">
+      <button id="btn-help">help</button>
+      <button id="btn-missions">missions</button>
+      <button id="btn-map-full">map</button>
+    </span>
+  </header>
+  <main id="grid">
+    <aside id="status-pane" class="pane">
+      <h2>STATUS</h2>
+      <div id="status-body"></div>
+      <h2>YOU / INVENTORY</h2>
+      <div id="inv-body"></div>
+    </aside>
+    <section id="center-col">
+      <div id="actions-pane" class="pane">
+        <h2>ACTIONS — cpu / mem / tasks / trace</h2>
+        <div id="actions-body"></div>
+      </div>
+      <div id="console-pane" class="pane">
+        <div id="story-banner"></div>
+        <div id="term-output"></div>
+        <div id="suggest-row"></div>
+        <div id="input-row">
+          <span id="prompt">guest@home-pc:/&gt;</span>
+          <input id="term-input" autocomplete="off" spellcheck="false" placeholder="type 'help' — TAB autocompletes…">
+        </div>
+      </div>
+    </section>
+    <aside id="right-col">
+      <div id="map-pane" class="pane">
+        <h2>MAP <span id="map-level">— city view</span>
+          <span id="map-zoom-btns"><button data-zoom="in">+</button><button data-zoom="out">−</button></span>
+        </h2>
+        <canvas id="map" width="360" height="300"></canvas>
+        <div id="map-legend">green=known ⋅ grey=unknown ⋅ cyan=wireless ⋅ yellow=laser ⋅ red dashed=damaged wire<br>click node = connect · wheel = zoom</div>
+      </div>
+      <div id="notif-pane" class="pane">
+        <h2>NOTIFICATIONS / EMAIL</h2>
+        <div id="notif-body"></div>
+      </div>
+    </aside>
+  </main>
+  <footer id="footer">from a 2006 .doc design — console + trace + bounces + Oldnet/Betanet + physical movement — TAB completes · ↑↓ history · try <b>help</b>, <b>missions</b>, <b>scan</b>, <b>map</b></footer>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
